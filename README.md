@@ -15,7 +15,8 @@ Finally issue these commands to spoof a failure:
 # start the workflow with a bad SubscriptionID of "GarbageSubscriptionID"
 temporal workflow start --type OnboardApplication \
     --workflow-id foo \
-    --input-file onboard_application.json
+    --input-file onboard_application.json \
+    --task-queue apps
     
 # observe that:
 # 1. the "SetupJFrog" activity has failed due to having this SubscriptionID
