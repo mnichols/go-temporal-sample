@@ -9,8 +9,7 @@ Start local dev server as: `temporal server start-dev`
 Then in another terminal start the worker: `go run cmd/backend/main.go`
 
 Finally issue these commands to spoof a failure:
-
-
+)
 ```bash
 
 # start the workflow with a bad SubscriptionID of "GarbageSubscriptionID"
@@ -27,5 +26,5 @@ temporal workflow signal --name correctSubscriptionID \
     --input '{"subscriptionId": "123"}' 
     --workflow-id foo
     
-# observe that the workflow recalls the SetupJFrog activity and exits
+# observe that the workflow re-calls the SetupJFrog activity and exits
 ```
