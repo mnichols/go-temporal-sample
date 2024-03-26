@@ -84,10 +84,10 @@ func (o *Orchestrations) setupJFrog(ctx workflow.Context,
 				logger.Debug("received signal", "signal", SignalCorrectSubscriptionID)
 			})
 			workflow.Go(ctx, func(ctx workflow.Context) {
-				if err := workflow.ExecuteActivity(ctx, notifications.TypeHandlers.RequestCorrection, &messaging.RequestCorrectionRequest{
+				if werr := workflow.ExecuteActivity(ctx, notifications.TypeHandlers.RequestCorrection, &messaging.RequestCorrectionRequest{
 					BadSubscriptionID: request.SubscriptionID,
 					UserID:            params.UserID,
-				}); err != nil {
+				}); werr != nil {
 					logger.Error("failed to notify of correction! what should we do???")
 				}
 			})
