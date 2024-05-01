@@ -61,7 +61,15 @@ func (o *Orchestrations) setupJFrog(ctx workflow.Context,
 	if counter > 10 {
 		return nil, fmt.Errorf("too many attempts were made trying to setup jfrog %d", counter)
 	}
+	chanCtx, cancelCorrection := workflow.WithCancel(ctx)
+	correctionSignalChan := workflow.GetSignalChannel(chanCtx, SignalCorrectSubscriptionID)
 
+	var correction *messaging.CorrectSubscriptionIDCommand
+
+	workflow.Go(ctx, func(ctx workflow.Context) {
+		correctionSignalChan.Receive(ctx, &correction)
+		logger.Debug("received signal", "signal", SignalCorrectSubscriptionID)
+	})
 	var response *messaging.SetupJFrogResponse
 	var err error
 	err = workflow.ExecuteActivity(ctx, cicd.TypeHandlers.SetupJFrog, request).Get(ctx, &response)
@@ -74,15 +82,9 @@ func (o *Orchestrations) setupJFrog(ctx workflow.Context,
 	if errors.As(err, &appErr) {
 		switch appErr.Type() {
 		case cicd.BadSubscriptionIDErr:
-			chanCtx, cancelCorrection := workflow.WithCancel(ctx)
-			correctionSignalChan := workflow.GetSignalChannel(chanCtx, SignalCorrectSubscriptionID)
 
-			var correction *messaging.CorrectSubscriptionIDCommand
 			// setup our signal handler
-			workflow.Go(ctx, func(ctx workflow.Context) {
-				correctionSignalChan.Receive(ctx, &correction)
-				logger.Debug("received signal", "signal", SignalCorrectSubscriptionID)
-			})
+
 			workflow.Go(ctx, func(ctx workflow.Context) {
 				if werr := workflow.ExecuteActivity(ctx, notifications.TypeHandlers.RequestCorrection, &messaging.RequestCorrectionRequest{
 					BadSubscriptionID: request.SubscriptionID,
@@ -93,12 +95,7 @@ func (o *Orchestrations) setupJFrog(ctx workflow.Context,
 			})
 
 			// this timeout can be as long as your secrets would be valid
-			ok, err := workflow.AwaitWithTimeout(ctx, time.Minute*60, func() bool {
-				return correction != nil
-			})
-			if !temporal.IsCanceledError(err) && !ok {
-				return nil, fmt.Errorf("workflow failed due to bad subscription ID that was not corrected within an hour: %s", request.SubscriptionID)
-			}
+
 			cancelCorrection()
 			request.SubscriptionID = correction.SubscriptionID
 

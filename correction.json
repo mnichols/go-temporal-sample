@@ -1,0 +1,18 @@
+{
+  "ClientId":     "",
+  "ClientSecret": "",
+  "TenantId":     "",
+
+  "ClientIdJfrog": "",
+  "ClientSecretJfrog": "",
+  "TenantIdJfrog":     "",
+  "Accountname" : "",
+  "Emailid" : "",
+
+  "Jfrogname":             "",
+  "Packagetype":           "",
+  "Repotype":              "",
+  "Groupname":            "",
+  "Repositories":          [""],
+  "DefaultDeploymentRepo": ""
+}
