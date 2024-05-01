@@ -1,5 +1,5 @@
 {
 	"userId": "123",
-	"subscriptionId": "GarbageSubscriptionID",
+	"ClientIdJfrog": "BAD_JFROG_CLIENT_ID",
 	"jwt": "jwt123"
 }

@@ -2,7 +2,8 @@ package orchestrations
 
 var TypeOrchestrations *Orchestrations
 
-const SignalCorrectSubscriptionID = "correctSubscriptionID"
+const SignalCorrection = "correct"
+const QueryOnboardingState = "getOnboardingState"
 
 type Orchestrations struct {
 }

@@ -1,9 +1,9 @@
 package messaging
 
 type OnboardApp struct {
-	UserID         string
-	JWT            string
-	SubscriptionID string
+	UserID        string
+	JWT           string
+	ClientIDJfrog string
 }
 
 type OnboardJFrogApp struct {
@@ -20,19 +20,37 @@ type GetSecretsResponse struct {
 }
 
 type SetupJFrogRequest struct {
-	SubscriptionID string
-	Secret         string
+	ClientIDJfrog     string
+	ClientSecretJfrog string
+	TenantIdJfrog     string
+	Jfrogname         string
 }
 
 type SetupJFrogResponse struct {
-	SubscriptionID string
-	Secret         string
+	ClientIDJfrog     string
+	ClientSecretJfrog string
+	TenantIdJfrog     string
+	Jfrogname         string
 }
 type RequestCorrectionRequest struct {
 	BadSubscriptionID string
 	UserID            string
+	Message           string
 }
 
-type CorrectSubscriptionIDCommand struct {
-	SubscriptionID string
+type CorrectionCommand struct {
+	ClientId              *string   `json:"ClientId"`
+	ClientSecret          *string   `json:"ClientSecret"`
+	TenantId              *string   `json:"TenantId"`
+	ClientIdJfrog         *string   `json:"ClientIdJfrog"`
+	ClientSecretJfrog     *string   `json:"ClientSecretJfrog"`
+	TenantIdJfrog         *string   `json:"TenantIdJfrog"`
+	Accountname           *string   `json:"Accountname"`
+	Emailid               *string   `json:"Emailid"`
+	Jfrogname             *string   `json:"Jfrogname"`
+	Packagetype           *string   `json:"Packagetype"`
+	Repotype              *string   `json:"Repotype"`
+	Groupname             *string   `json:"Groupname"`
+	Repositories          *[]string `json:"Repositories"`
+	DefaultDeploymentRepo *string   `json:"DefaultDeploymentRepo"`
 }

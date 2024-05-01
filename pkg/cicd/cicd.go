@@ -10,7 +10,7 @@ import (
 
 var TypeHandlers *Handlers
 
-const BadSubscriptionIDErr = "Bad Subscription ID"
+const RequestParamsErr = "RequestParamsErr"
 
 type Handlers struct {
 }
@@ -18,13 +18,15 @@ type Handlers struct {
 func (h *Handlers) SetupJFrog(ctx context.Context, req *messaging.SetupJFrogRequest) (*messaging.SetupJFrogResponse, error) {
 	logger := activity.GetLogger(ctx)
 	logger.Debug("setting up jfrog")
-	if req.SubscriptionID == "GarbageSubscriptionID" {
-		err := fmt.Errorf("subscriptionID %s is garbage", req.SubscriptionID)
-		return nil, temporal.NewNonRetryableApplicationError(err.Error(), BadSubscriptionIDErr, err)
+	if req.ClientIDJfrog == "BAD_JFROG_CLIENT_ID" {
+		err := fmt.Errorf("Jfrog client id %s is bad", req.ClientIDJfrog)
+		return nil, temporal.NewNonRetryableApplicationError(err.Error(), RequestParamsErr, err)
 	}
 
 	return &messaging.SetupJFrogResponse{
-		SubscriptionID: req.SubscriptionID,
-		Secret:         req.Secret,
+		ClientIDJfrog:     req.ClientIDJfrog,
+		ClientSecretJfrog: req.ClientSecretJfrog,
+		TenantIdJfrog:     req.TenantIdJfrog,
+		Jfrogname:         req.Jfrogname,
 	}, nil
 }

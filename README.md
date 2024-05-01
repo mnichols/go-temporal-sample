@@ -23,8 +23,8 @@ temporal workflow start --type OnboardApplication \
 # 2. the workflow detects this BadSubscriptionIDErr so RequestsCorrection  
     
 # send a signal to the workflow to correct the bad SubscriptionID
-temporal workflow signal --name correctSubscriptionID \
-    --input '{"subscriptionId": "123"}' 
+temporal workflow signal --name correct \
+    --input-file correct.json \
     --workflow-id foo
     
 # observe that the workflow re-calls the SetupJFrog activity and exits
